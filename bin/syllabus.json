@@ -1,0 +1,20 @@
+{
+    "Mathematics": [
+        "Algebra",
+        "Calculus",
+        "Probability",
+        "Trigonometry"
+    ],
+    "Physics": [
+        "Newton's Laws",
+        "Thermodynamics",
+        "Electromagnetism",
+        "Quantum Mechanics"
+    ],
+    "Computer Science": [
+        "Data Structures",
+        "Algorithms",
+        "Machine Learning",
+        "Artificial Intelligence"
+    ]
+}
