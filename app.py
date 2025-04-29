@@ -4,6 +4,7 @@ from pdf_processor import extract_text_from_pdf
 from question_generator import generate_from_text, generate_from_topic
 from evaluator import evaluate_answer
 from answer_classifier import generate_ideal_answer
+from plagiarism_checker import calculate_plagiarism_score
 
 # Function to encode image to base64
 def get_base64_of_image(image_path):
@@ -132,12 +133,30 @@ elif st.session_state["page"] == "results":
         for idx, (question, user_answer) in enumerate(st.session_state["user_answers"].items()):
             ideal_answer = generate_ideal_answer(question)
             score, feedback = evaluate_answer(user_answer, ideal_answer)
+            plagiarism_score, status_label, color_code = calculate_plagiarism_score(user_answer, ideal_answer)
 
             st.markdown(f"<div class='question-box'><b>Question {idx+1}:</b> {question}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='answer-box'><b>Your Answer:</b> {user_answer}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='answer-box'><b>AI-Generated Ideal Answer:</b> {ideal_answer}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='answer-box'><b>Your Score:</b> {score}%</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='answer-box'><b>Feedback:</b> {feedback}</div>", unsafe_allow_html=True)
+
+            st.markdown(f"""
+            <div style='
+                background-color: {color_code};
+                padding: 10px;
+                border-radius: 8px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 10px;
+            '>
+            Plagiarism Score: {plagiarism_score}% — {status_label}
+            </div>
+            """, unsafe_allow_html=True)
+
+            if plagiarism_score > 50:
+                st.warning("⚠️ Your answer may be plagiarized. Try to rephrase or write in your own words.")
+
             st.write("---")
     else:
         st.warning("No answers submitted. Please try again.")
